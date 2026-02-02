@@ -20,9 +20,11 @@ various-scripts/
 │   ├── ToggleAC.bat          # Toggle WiFi autoconfig
 │   └── resetWiFi.ps1         # PowerShell WiFi adapter reset
 ├── rename scan/              # Scan file renaming utilities
-│   ├── rename_scans.bat      # Triggers Python script on remote NAS
+│   ├── rename_scans.bat      # Triggers Python script on remote NAS via SSH
 │   ├── rename_scans.reg      # Context menu registration
-│   └── scanrename.py         # Python script for standardizing filenames
+│   ├── scanrename.py         # Python script for standardizing filenames
+│   └── SSH_SETUP.md          # SSH key authentication setup guide
+├── .gitignore                # Prevents committing sensitive files
 ├── LICENSE                   # GPL-3.0 license
 └── README.md                 # Project documentation
 ```
@@ -89,8 +91,9 @@ various-scripts/
 4. **Path conventions** - Scripts expect to be located at `C:\projects\batch\`
 
 5. **NAS integration** - The rename scan feature uses:
-   - SSH via plink with key-based or password file authentication
+   - SSH via plink with **key-based authentication** (see `rename scan/SSH_SETUP.md`)
    - Path translation from Windows (`X:\`) to Unix (`/volume1/`)
+   - Configuration variables at the top of the script for easy customization
 
 ### Testing Considerations
 
@@ -116,6 +119,24 @@ various-scripts/
 
 ## Security Notes
 
-- The `rename_scans.bat` references a password file for NAS authentication
-- Credentials should not be committed to the repository
-- Admin privileges required for WiFi scripts and registry modifications
+### Authentication
+- **NAS access uses SSH key authentication** - No passwords stored in scripts
+- SSH private keys should be stored in `%USERPROFILE%\.ssh\` with proper permissions
+- See `rename scan/SSH_SETUP.md` for complete setup instructions
+
+### Protected by .gitignore
+The following sensitive file patterns are excluded from version control:
+- SSH keys (`*.pem`, `*.key`, `*.ppk`, `id_rsa*`)
+- Password/credential files (`*password*`, `*secret*`, `*credential*`)
+- Environment files (`.env`, `*.local`)
+
+### Privilege Requirements
+- WiFi scripts (`ToggleAC.bat`, `resetWiFi.ps1`) require administrator privileges
+- Registry imports require administrator privileges
+- SSH key generation requires no special privileges
+
+### Best Practices for AI Assistants
+1. **Never hardcode credentials** - Use environment variables, key files, or Windows Credential Manager
+2. **Check .gitignore** - Ensure sensitive files are excluded before committing
+3. **Validate SSH key paths** - Scripts should fail gracefully if keys are missing
+4. **No plaintext passwords** - Always prefer SSH key authentication over password files

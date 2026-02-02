@@ -1,0 +1,36 @@
+# Secrets and credentials
+*.txt
+!README.txt
+supersecret.txt
+*password*
+*credential*
+*secret*
+*.pem
+*.key
+*.ppk
+
+# SSH keys (should never be in repo)
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+*.pub
+nas_id_rsa*
+
+# Environment files
+.env
+.env.*
+*.local
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Backup files created by editors
+*.bak
+*.backup
+*~
+
+# Log files
+*.log
